@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.UserDao">
+
+    <resultMap type="com.exam.pojo.model.UserModel" id="UserMap">
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="identityNum" column="identity_num" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="role" column="role" javaType="com.exam.common.enums.impl.UserRoleEnum"
+                typeHandler="com.exam.config.EnumValueTypeHandler"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="INTEGER"/>
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select
+          user_name, password, nick_name, phone, identity_num, address, role, create_time, update_time, id, avatar, deleted
+        from user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+        user_name, password, nick_name, phone, identity_num, address, role, create_time, update_time, id, avatar,
+        deleted
+        from user
+        <where>
+            <if test="userName != null and userName != ''">
+                and user_name like "%${userName}%"
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name = #{nickName}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="identityNum != null and identityNum != ''">
+                and identity_num = #{identityNum}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+            <if test="role != null">
+                and role = #{role,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                and avatar = #{avatar}
+            </if>
+            <if test="deleted != null">
+                and deleted = #{deleted}
+            </if>
+        </where>
+        order by `create_time` DESC
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into user(user_name, password, nick_name, phone, identity_num, address, role, create_time, update_time, id, avatar, deleted)
+        values (#{userName}, #{password}, #{nickName}, #{phone}, #{identityNum}, #{address}, #{role,typeHandler=com.exam.config.EnumValueTypeHandler}, #{createTime}, #{updateTime}, #{id}, #{avatar}, #{deleted})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into user(user_name, password, nick_name, phone, identity_num, address, role, create_time, update_time,
+        id, avatar, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.password}, #{entity.nickName}, #{entity.phone}, #{entity.identityNum},
+            #{entity.address}, #{entity.role}, #{entity.createTime}, #{entity.updateTime}, #{entity.id},
+            #{entity.avatar}, #{entity.deleted})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into user(user_name, password, nick_name, phone, identity_num, address, role, create_time, update_time,
+        avatar, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.password}, #{entity.nickName}, #{entity.phone}, #{entity.identityNum},
+            #{entity.address}, #{entity.role}, #{entity.createTime}, #{entity.updateTime}, #{entity.avatar},
+            #{entity.deleted})
+        </foreach>
+        on duplicate key update
+        user_name = values(user_name),
+        password = values(password),
+        nick_name = values(nick_name),
+        phone = values(phone),
+        identity_num = values(identity_num),
+        address = values(address),
+        role = values(role),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        avatar = values(avatar),
+        deleted = values(deleted)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="identityNum != null and identityNum != ''">
+                identity_num = #{identityNum},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="role != null">
+                role = #{role,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="patchInfo">
+        update user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="identityNum != null and identityNum != ''">
+                identity_num = #{identityNum},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="role != null">
+                role = #{role,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
+            </if>
+        </set>
+        where user_name = #{userName}
+    </update>
+
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="selectByUserName" resultMap="UserMap">
+        select * from user
+        where user_name = #{userName}
+    </select>
+
+
+</mapper>
+

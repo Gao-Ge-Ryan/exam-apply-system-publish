@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.InfoDao">
+
+    <resultMap type="com.exam.pojo.model.InfoModel" id="InfoMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" javaType="com.exam.common.enums.impl.InfoTypeEnum"
+                typeHandler="com.exam.config.EnumValueTypeHandler"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="examId" column="exam_id" jdbcType="VARCHAR"/>
+        <association property="examModel" columnPrefix="exam_" resultMap="com.exam.dao.ExamDao.ExamMap"></association>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InfoMap">
+        select
+          id, title, content, type, status, create_time, update_time, user_id, exam_id
+        from info
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="InfoMap">
+        select
+        info.id, info.title, info.content, info.`type`, info.status, info.create_time, info.update_time, info.user_id, info.exam_id,
+
+        em.id, em.title as exam_title, em.description as exam_description, em.create_time as exam_create_time, em.update_time as exam_update_time, em.start_time as exam_start_time, em.end_time as exam_end_time, em.status as exam_status, em.price as exam_price, em.apply_start_time as exam_apply_start_time,
+        em.apply_end_time as exam_apply_end_time, em.announcements as exam_announcements, em.user_id as exam_user_id, em.exam_type as exam_exam_type
+        from info
+        left join exam em on em.id =info.exam_id
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and info.title like "%${title}%"
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="type != null">
+                and type = #{type,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="examId != null and examId != ''">
+                and exam_id = #{examId}
+            </if>
+        </where>
+        order by create_time DESC
+    </select>
+    <select id="selectByExamIdAndType" resultType="com.exam.pojo.entity.Info">
+        select * from info where exam_id=#{examId} and `type`=#{typeId}
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into info(id, title, content, type, status, create_time, update_time, user_id, exam_id)
+        values (#{id}, #{title}, #{content}, #{type,typeHandler=com.exam.config.EnumValueTypeHandler}, #{status}, #{createTime}, #{updateTime}, #{userId}, #{examId})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into info(id, title, content, type, status, create_time, update_time, user_id, exam_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.title}, #{entity.content}, #{entity.type}, #{entity.status}, #{entity.createTime},
+            #{entity.updateTime}, #{entity.userId}, #{entity.examId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into info(title, content, type, status, create_time, update_time, user_id, exam_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.content}, #{entity.type}, #{entity.status}, #{entity.createTime},
+            #{entity.updateTime}, #{entity.userId}, #{entity.examId})
+        </foreach>
+        on duplicate key update
+        title = values(title),
+        content = values(content),
+        type = values(type),
+        status = values(status),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        user_id = values(user_id),
+        exam_id = values(exam_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update info
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="type != null">
+                type = #{type,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="examId != null and examId != ''">
+                exam_id = #{examId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from info where id = #{id}
+    </delete>
+
+</mapper>
+

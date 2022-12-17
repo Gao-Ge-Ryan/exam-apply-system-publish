@@ -1,0 +1,50 @@
+# 服务器数据库
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://82.157.42.25:3306/exam_apply?serverTimezone=GMT%2B8&useUnicode=true&characterEncodeing=UTF-8&useSSL=false
+    username: root
+    password: Mysql123
+  redis:
+    host: 82.157.42.25
+    port: 6379
+    password: Redis123
+    database: 1
+
+# docker容器数据库
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://app_mysql:3306/exam_apply?serverTimezone=GMT%2B8&useUnicode=true&characterEncodeing=UTF-8&useSSL=false
+#    username: root
+#    password: Mysql123
+#  redis:
+#    host: app_redis
+#    port: 6379
+#    password: Redis123
+#    database: 1
+
+
+server:
+  port: 2020
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+# JWT令牌密钥
+application:
+  security:
+    secret: salt
+# 枚举类包路径
+  enum:
+    default:
+      package:
+        path: com.exam.common.enums.impl
+# 支付宝支付ID、私钥、公钥
+alipay:
+  info:
+    appId:
+    privateKey:
+    alipayPublicKey:
+# Email邮箱配置信息: 账号、授权码
+email:
+  emailAccount:
+  authCode:

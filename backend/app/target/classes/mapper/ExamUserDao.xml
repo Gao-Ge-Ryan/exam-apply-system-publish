@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.ExamUserDao">
+
+    <resultMap type="com.exam.pojo.model.ExamUserModel" id="ExamUserMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="examId" column="exam_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="VARCHAR"/>
+        <result property="status" column="status" javaType="com.exam.common.enums.impl.ExamUserStatusEnum"
+                typeHandler="com.exam.config.EnumValueTypeHandler"/>
+        <result property="applyName" column="apply_name" jdbcType="VARCHAR"/>
+        <result property="idNumber" column="id_number" jdbcType="VARCHAR"/>
+        <result property="examRoom" column="exam_room" jdbcType="VARCHAR"/>
+        <result property="examNumber" column="exam_number" jdbcType="VARCHAR"/>
+        <result property="identificationPhoto" column="identification_photo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ExamUserMap">
+        select
+          id, exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room, exam_number, identification_photo
+        from exam_user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ExamUserMap">
+        select
+        id, exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room, exam_number,
+        identification_photo
+        from exam_user
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="examId != null and examId != ''">
+                and exam_id = #{examId}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="score != null and score != ''">
+                and score = #{score}
+            </if>
+            <if test="status != null">
+                and status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+            <if test="applyName != null and applyName != ''">
+                and apply_name like '%${applyName}%'
+            </if>
+            <if test="idNumber != null and idNumber != ''">
+                and id_number = #{idNumber}
+            </if>
+            <if test="examRoom != null and examRoom != ''">
+                and exam_room = #{examRoom}
+            </if>
+            <if test="examNumber != null and examNumber != ''">
+                and exam_number = #{examNumber}
+            </if>
+        </where>
+        order by `create_time` DESC
+    </select>
+    <select id="queryByExamIdAndUserId" resultMap="ExamUserMap">
+        select * from exam_user where exam_id=#{examId} AND user_id=#{userId}
+    </select>
+    <select id="selectByExampleId" resultMap="ExamUserMap">
+        select
+            id, exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room, exam_number,
+            identification_photo
+        from exam_user where exam_id=#{examId}
+
+    </select>
+    <select id="selectByUserId" resultMap="ExamUserMap">
+        select * from exam_user where user_id=#{userId}
+    </select>
+    <select id="selectAll" resultMap="ExamUserMap">
+        select * from exam_user
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into exam_user(id, exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room, exam_number, identification_photo)
+        values (#{id}, #{examId}, #{createTime}, #{userId}, #{score}, #{status,typeHandler=com.exam.config.EnumValueTypeHandler}, #{applyName}, #{idNumber}, #{examRoom}, #{examNumber}, #{identificationPhoto})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into exam_user(id, exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room,
+        exam_number)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.examId}, #{entity.createTime}, #{entity.userId}, #{entity.score}, #{entity.status},
+            #{entity.applyName}, #{entity.idNumber}, #{entity.examRoom}, #{entity.examNumber})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into exam_user(exam_id, create_time, user_id, score, status, apply_name, id_number, exam_room,
+        exam_number)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.examId}, #{entity.createTime}, #{entity.userId}, #{entity.score}, #{entity.status},
+            #{entity.applyName}, #{entity.idNumber}, #{entity.examRoom}, #{entity.examNumber})
+        </foreach>
+        on duplicate key update
+        exam_id = values(exam_id),
+        create_time = values(create_time),
+        user_id = values(user_id),
+        score = values(score),
+        status = values(status),
+        apply_name = values(apply_name),
+        id_number = values(id_number),
+        exam_room = values(exam_room),
+        exam_number = values(exam_number)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update exam_user
+        <set>
+            <if test="examId != null and examId != ''">
+                exam_id = #{examId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="score != null and score != ''">
+                score = #{score},
+            </if>
+            <if test="status != null">
+                status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="applyName != null and applyName != ''">
+                apply_name = #{applyName},
+            </if>
+            <if test="idNumber != null and idNumber != ''">
+                id_number = #{idNumber},
+            </if>
+            <if test="examRoom != null and examRoom != ''">
+                exam_room = #{examRoom},
+            </if>
+            <if test="examNumber != null and examNumber != ''">
+                exam_number = #{examNumber},
+            </if>
+            <if test="identificationPhoto != null and identificationPhoto != ''">
+                identification_photo = #{identificationPhoto},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from exam_user where id = #{id}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,66 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>快来聊天啊</title>
+    <script type="text/javascript">
+        var ws;
+
+        function login() {
+            if (!ws) {
+                var user = document.getElementById("name").value;
+                try {
+                    ws = new WebSocket("ws://localhost:1314/websocket/" + user);//连接服务器
+                    ws.onopen = function (event) {
+                        console.log("已经与服务器建立了连接...");
+                        alert("登陆成功，可以开始聊天了")
+                    };
+                    ws.onmessage = function (event) {
+                        console.log("接收到服务器发送的数据..." + event.data);
+                        document.getElementById("info").innerHTML += event.data + "<br>";
+                    };
+                    ws.onclose = function (event) {
+                        console.log("已经与服务器断开连接...");
+                    };
+                    ws.onerror = function (event) {
+                        console.log("WebSocket异常！");
+                    };
+                } catch (ex) {
+                    alert(ex.message);
+                }
+                document.getElementById("login").innerHTML = "退出";
+            } else {
+                ws.close();
+                ws = null;
+                document.getElementById("login").innerHTML = "登录";
+            }
+        }
+
+        function SendData() {
+            var data = document.getElementById("data").value;
+            try {
+                ws.send(data);
+            } catch (ex) {
+                alert(ex.message);
+            }
+        };
+
+    </script>
+    <style>
+        body {
+            background: cadetblue;
+        }
+    </style>
+</head>
+<body>
+<input id="name" value="" placeholder="用户名">
+<button id="login" type="button" onclick="login()" value="">登陆</button>
+<br/><br/>
+<div id="info">
+
+</div>
+<br/><br/>
+<input id="data">
+<button type="button" onclick='SendData();'>发送消息</button>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.ExamIntroductionDao">
+
+    <resultMap type="com.exam.pojo.model.ExamIntroductionModel" id="ExamIntroductionMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="rule" column="rule" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="examContent" column="exam_content" jdbcType="VARCHAR"/>
+        <result property="grade" column="grade" jdbcType="VARCHAR"/>
+        <result property="certificate" column="certificate" jdbcType="VARCHAR"/>
+        <result property="examType" column="exam_type" javaType="com.exam.common.enums.impl.ExamTypeEnum" typeHandler="com.exam.config.EnumValueTypeHandler"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ExamIntroductionMap">
+        select
+          id, title, description, rule, create_time, update_time, user_id, exam_content, grade, certificate, exam_type
+        from exam_introduction
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ExamIntroductionMap">
+        select
+          id, title, description, rule, create_time, update_time, user_id, exam_content, grade, certificate, exam_type
+        from exam_introduction
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like "%${title}%"
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="rule != null and rule != ''">
+                and rule = #{rule}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="examContent != null and examContent != ''">
+                and exam_content = #{examContent}
+            </if>
+            <if test="grade != null and grade != ''">
+                and grade = #{grade}
+            </if>
+            <if test="certificate != null and certificate != ''">
+                and certificate = #{certificate}
+            </if>
+            <if test="examType != null">
+                and exam_type = #{examType,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+        </where>
+        order by `create_time` DESC
+    </select>
+    <select id="selectByType" resultMap="ExamIntroductionMap">
+        select * from exam_introduction
+        where exam_type = #{examType,typeHandler=com.exam.config.EnumValueTypeHandler}
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into exam_introduction(id, title, description, rule, create_time, update_time, user_id, exam_content, grade, certificate, exam_type)
+        values (#{id}, #{title}, #{description}, #{rule}, #{createTime}, #{updateTime}, #{userId}, #{examContent}, #{grade}, #{certificate}, #{examType,typeHandler=com.exam.config.EnumValueTypeHandler})
+    </insert>
+
+    <insert id="insertBatch" >
+        insert into exam_introduction(id, title, description, rule, create_time, update_time, user_id, exam_content, grade, certificate, exam_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.id}, #{entity.title}, #{entity.description}, #{entity.rule}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId}, #{entity.examContent}, #{entity.grade}, #{entity.certificate}, #{entity.examType})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into exam_introduction(title, description, rule, create_time, update_time, user_id, exam_content, grade, certificate, exam_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.description}, #{entity.rule}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId}, #{entity.examContent}, #{entity.grade}, #{entity.certificate}, #{entity.examType})
+        </foreach>
+        on duplicate key update
+        title = values(title),
+        description = values(description),
+        rule = values(rule),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        user_id = values(user_id),
+        exam_content = values(exam_content),
+        grade = values(grade),
+        certificate = values(certificate),
+        exam_type = values(exam_type)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update exam_introduction
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="rule != null and rule != ''">
+                rule = #{rule},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="examContent != null and examContent != ''">
+                exam_content = #{examContent},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+            <if test="certificate != null and certificate != ''">
+                certificate = #{certificate},
+            </if>
+            <if test="examType != null">
+                exam_type = #{examType,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from exam_introduction where id = #{id}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,68 @@
+version: "2.2"
+
+services:
+
+  exam_redis:
+    image: redis:7-bullseye
+    container_name: app_redis
+    volumes:
+      - ../redis/redis.conf:/etc/redis/redis.conf:ro
+      - ../redis/data:/data
+    command:
+      - redis-server
+      - /etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - appnet
+
+  exam_mysql:
+    image: mysql:5.7
+    container_name: app_mysql
+    command: --init-file /docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ../mysql/my.cnf:/etc/mysql/my.cnf:ro
+      - ../mysql/data:/var/lib/mysql
+      - ../mysql/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: Mysql123
+    ports:
+      - "3306:3306"
+    networks:
+      - appnet
+
+  exam_apply_app:
+    build: ../app
+    image: exam_apply_image_app
+    container_name: exam_apply_app
+    depends_on:
+      - exam_mysql
+      - exam_redis
+    ports:
+      - "2020:2020"
+    networks:
+      - appnet
+
+  exam_apply_front:
+    build: ../front
+    image: exam_apply_image_front
+    container_name: exam_apply_front
+    ports:
+      - "2021:2021"
+#    networks:
+#      - appnet
+
+  exam_apply_backstage:
+    build: ../backstage
+    image: exam_apply_image_backstage
+    container_name: exam_apply_backstage
+    ports:
+      - "2022:2022"
+#    networks:
+#      - appnet
+
+
+
+networks:
+  appnet:
+    driver: bridge

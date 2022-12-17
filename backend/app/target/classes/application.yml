@@ -1,0 +1,50 @@
+# 服务器数据库
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://82.157.42.25:3306/exam_apply?serverTimezone=GMT%2B8&useUnicode=true&characterEncodeing=UTF-8&useSSL=false
+    username: root
+    password: Mysql123
+  redis:
+    host: 82.157.42.25
+    port: 6379
+    password: Redis123
+    database: 1
+
+# docker容器数据库
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://app_mysql:3306/exam_apply?serverTimezone=GMT%2B8&useUnicode=true&characterEncodeing=UTF-8&useSSL=false
+#    username: root
+#    password: Mysql123
+#  redis:
+#    host: app_redis
+#    port: 6379
+#    password: Redis123
+#    database: 1
+
+
+server:
+  port: 2020
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+# JWT令牌密钥
+application:
+  security:
+    secret: salt
+# 枚举类包路径
+  enum:
+    default:
+      package:
+        path: com.exam.common.enums.impl
+# 支付宝支付ID、私钥、公钥
+alipay:
+  info:
+    appId: 2021000118606483
+    privateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3jZUbFCnZKIx/wKXyUvdU7UUqpl4mN5LMw4+9fx1r6E2aV/41ostrJFE8p1lMeEQ4VPUgKZMNwEGpPnYOmLo+laGKZ/jspR0g47G/BIJy7PaTrMSeNs5XF4OPTYO7Bk9TDUYySRwJOv1UbPnfwllS9pniSWCU6+OGveKkJf5UFqsXBc3tKvz+FwWavjyrSSFt5CqQycwuVhyFgiGnIeYwQ+Hm2YHfhwDhC8oBt9ceivqzszDj3JkCwbet+9vgeVod6N5mUFAP3mW0iSMngggx0z3CU19XUhii0KUr/zeEyYN2PgQGQZPvNkkbobzO4sejtoj/PcQUe7PxJj68OQ21AgMBAAECggEALsfv66Hc9JLIFDtGUBdjIAsE6NTUBAt/554kAVjnZ7wiIycwC/18uMbdyYahVMMGKBFHFDZkW0nXsknQDvJP7Wl3bW4IXE/Mt7gwcg21LZNFWOfciLJRLpM4nYpU+5KlHvawIFrPwW5+aEkJ+kRvPZzKJYksC2h/abT1kX55bnaVWneyWdg4hijELSAKcJezrqosXBmVAiw3OXLzzE85L/N8buS4dEnVZ1ymvdF0n5jrBVfvKd9VHuPrmpJHH0i5rb3Wn12JX3j1ssM64lE8xCprCwz9towwVJhjb29i42eax2PKkKxe07CZ98aXyZgDA6I7q2fsa86erfWr0oHU4QKBgQDyuDbV9PPa8W7g04s+8lfSUifN1P5S415zoNKnGw+rnLv4lLhGu1mBNqSPirBRGkPN8R54KmdctGXq3FS9IXHckKliFWJzjheQqhnVXmvrvz5SxVE50RXWowPwT7SeVCa1ncRbcI0mfri45CQpWAujdh2mkbYVnzm2qDIvzZdQnQKBgQDBmJ6ds/j+TVCzSVGPGcoF04jRjHOucv89hTaj3RZUJ1h0U8CHvlQA+Rq7Vstn5i8CuwaPSMjbh9Up66IZAWVOF+4sJ6rjX4REJb9ztd1un2Dlcr8oXemiUJcjvFqAn+otXGnADtjd0CMcbxY4YB04cf74YY0EjTZs+eyRJOSp+QKBgEtZRqSrE1y/oJUo9sxGvV6sZHDwkzc2IGcy4NJBg17aHDxyJrbGiGWlifaJrmyvA6eWF8hkGYxc8Fq1pZTFIiy/t+WcD+Ehlk0xkS18z3Hy/60AVlPlhasJFjru83pHU3EEFiXwzdDKfBvhrxwqmgpXq6K/D1CtCmSa2GGgqD29AoGBAMEn8ToPkuLHaTk4cfOBG5vsjpnktJbdjeRnwTiFIf4cs5h855+IOnAuGonH83Jaq5Th3Y2gZScDw57rxvOD/PuJzMypV0s8xc7oirh8P85bnmXPswInkS+tkN7K0tF6vD898RT6u020mROJknX1D7J9qpNPYU+lRSQ9x9aZJLyhAoGAHJ7ZnOwbugFTUiwlAAFbP61PovIIsrc1tqgYMO5pgb834+DHD5LDqdziZ58LUSpUaUBQdaU2+ljJFcVtBzz/d5CSy2IzU0KxDIV9s96Ruiqo7Vd9QzluWDx+zxUengG23ds3AJOF6ehbqRfl+oAB4JzLPtbAyVJVWJEYYxUyrAg=
+    alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhF4i9xDs9vCzu38vxniMeNL+S4mtMC1PSf/hnpQc2Wlp2wr3QC2dL+B954N5vwiFDNTlQiQFkWODdFA+9EuKkVpUjuSnMxTqa9dvtYS80hHQ2rw98a5sUYQm1myqcHPaKPeFow92d7n8TKK9185qk9b7IDdb7poX98Fv23M4+8+vlnDX7V1C/CBH0wllUu0l5grlcQ6IB8eWLWKIN9F3II2CbzAaHPMDtGiow2DldeBxx7hO+Gg7E1cNN7aIASKUVrJI2ZWShduIviZPKbsyP8FwoNMD6NAjsfDs6Hcvo476EOnrbQWJoB371pKHB3v96HfRZmN6qETuTc/v+nCAQQIDAQAB
+# Email邮箱配置信息: 账号、授权码
+email:
+  emailAccount: 3300755918@qq.com
+  authCode: pugubdoyfupnchjh

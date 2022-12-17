@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.FeedbackDao">
+
+    <resultMap type="com.exam.pojo.model.FeedbackModel" id="FeedbackMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="type" column="type" javaType="com.exam.common.enums.impl.FeedBackTypeEnum" typeHandler="com.exam.config.EnumValueTypeHandler"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="replyContent" column="reply_content" jdbcType="VARCHAR"/>
+        <result property="replyUserId" column="reply_user_id" jdbcType="VARCHAR"/>
+        <result property="replyTime" column="reply_time" jdbcType="VARCHAR"/>
+        <result property="status" column="status" javaType="com.exam.common.enums.impl.FeedBackStatusEnum" typeHandler="com.exam.config.EnumValueTypeHandler"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="FeedbackMap">
+        select
+          id, title, content, user_id, type, create_time, reply_content, reply_user_id, reply_time, status
+        from feedback
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="FeedbackMap">
+        select
+          id, title, content, user_id, type, create_time, reply_content, reply_user_id, reply_time, status
+        from feedback
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like "%${title}%"
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="type != null">
+                and type = #{type,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="replyContent != null and replyContent != ''">
+                and reply_content = #{replyContent}
+            </if>
+            <if test="replyUserId != null and replyUserId != ''">
+                and reply_user_id = #{replyUserId}
+            </if>
+            <if test="replyTime != null and replyTime != ''">
+                and reply_time = #{replyTime}
+            </if>
+            <if test="status != null">
+                and status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+        </where>
+        order by `create_time` DESC
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into feedback(id, title, content, user_id, type, create_time, reply_content, reply_user_id, reply_time, status)
+        values (#{id}, #{title}, #{content}, #{userId}, #{type,typeHandler=com.exam.config.EnumValueTypeHandler}, #{createTime}, #{replyContent}, #{replyUserId}, #{replyTime}, #{status,typeHandler=com.exam.config.EnumValueTypeHandler})
+    </insert>
+
+    <insert id="insertBatch" >
+        insert into feedback(id, title, content, user_id, type, create_time, reply_content, reply_user_id, reply_time, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.id}, #{entity.title}, #{entity.content}, #{entity.userId}, #{entity.type}, #{entity.createTime}, #{entity.replyContent}, #{entity.replyUserId}, #{entity.replyTime}, #{entity.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into feedback(title, content, user_id, type, create_time, reply_content, reply_user_id, reply_time, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.content}, #{entity.userId}, #{entity.type}, #{entity.createTime}, #{entity.replyContent}, #{entity.replyUserId}, #{entity.replyTime}, #{entity.status})
+        </foreach>
+        on duplicate key update
+        title = values(title),
+        content = values(content),
+        user_id = values(user_id),
+        type = values(type),
+        create_time = values(create_time),
+        reply_content = values(reply_content),
+        reply_user_id = values(reply_user_id),
+        reply_time = values(reply_time),
+        status = values(status)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update feedback
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="type != null">
+                type = #{type,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="replyContent != null and replyContent != ''">
+                reply_content = #{replyContent},
+            </if>
+            <if test="replyUserId != null and replyUserId != ''">
+                reply_user_id = #{replyUserId},
+            </if>
+            <if test="replyTime != null and replyTime != ''">
+                reply_time = #{replyTime},
+            </if>
+            <if test="status != null">
+                status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from feedback where id = #{id}
+    </delete>
+
+</mapper>
+

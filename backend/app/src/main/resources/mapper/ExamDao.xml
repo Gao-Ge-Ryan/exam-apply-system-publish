@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.ExamDao">
+
+    <resultMap type="com.exam.pojo.model.ExamModel" id="ExamMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="INTEGER"/>
+        <result property="startTime" column="start_time" jdbcType="INTEGER"/>
+        <result property="endTime" column="end_time" jdbcType="INTEGER"/>
+        <result property="status" column="status" javaType="com.exam.common.enums.impl.ExamStatusEnum"
+                typeHandler="com.exam.config.EnumValueTypeHandler"/>
+        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="applyStartTime" column="apply_start_time" jdbcType="INTEGER"/>
+        <result property="applyEndTime" column="apply_end_time" jdbcType="INTEGER"/>
+        <result property="announcements" column="announcements" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="examType" column="exam_type" javaType="com.exam.common.enums.impl.ExamTypeEnum"
+                typeHandler="com.exam.config.EnumValueTypeHandler"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ExamMap">
+        select
+          id, title, description, create_time, update_time, start_time, end_time, status, price, apply_start_time, apply_end_time, announcements, user_id, exam_type
+        from exam
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ExamMap">
+        select
+        id, title, description, create_time, update_time, start_time, end_time, status, price, apply_start_time,
+        apply_end_time, announcements, user_id, exam_type
+        from exam
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like "%${title}%"
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="status != null">
+                and status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+            <if test="price != null and price != ''">
+                and price = #{price}
+            </if>
+            <if test="applyStartTime != null">
+                and apply_start_time = #{applyStartTime}
+            </if>
+            <if test="applyEndTime != null">
+                and apply_end_time = #{applyEndTime}
+            </if>
+            <if test="announcements != null and announcements != ''">
+                and announcements = #{announcements}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="examType != null">
+                and exam_type = #{examType,typeHandler=com.exam.config.EnumValueTypeHandler}
+            </if>
+        </where>
+        order by `create_time` DESC
+    </select>
+    <select id="queryAll" resultMap="ExamMap">
+        select *from exam
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into exam(id, title, description, create_time, update_time, start_time, end_time, status, price, apply_start_time, apply_end_time, announcements, user_id, exam_type)
+        values (#{id}, #{title}, #{description}, #{createTime}, #{updateTime}, #{startTime}, #{endTime}, #{status,typeHandler=com.exam.config.EnumValueTypeHandler}, #{price}, #{applyStartTime}, #{applyEndTime}, #{announcements}, #{userId}, #{examType,typeHandler=com.exam.config.EnumValueTypeHandler})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into exam(id, title, description, create_time, update_time, start_time, end_time, status, price,
+        apply_start_time, apply_end_time, announcements, user_id, exam_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.title}, #{entity.description}, #{entity.createTime}, #{entity.updateTime},
+            #{entity.startTime}, #{entity.endTime}, #{entity.status}, #{entity.price}, #{entity.applyStartTime},
+            #{entity.applyEndTime}, #{entity.announcements}, #{entity.userId}, #{entity.examType})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into exam(title, description, create_time, update_time, start_time, end_time, status, price,
+        apply_start_time, apply_end_time, announcements, user_id, exam_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.description}, #{entity.createTime}, #{entity.updateTime}, #{entity.startTime},
+            #{entity.endTime}, #{entity.status}, #{entity.price}, #{entity.applyStartTime}, #{entity.applyEndTime},
+            #{entity.announcements}, #{entity.userId}, #{entity.examType})
+        </foreach>
+        on duplicate key update
+        title = values(title),
+        description = values(description),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        start_time = values(start_time),
+        end_time = values(end_time),
+        status = values(status),
+        price = values(price),
+        apply_start_time = values(apply_start_time),
+        apply_end_time = values(apply_end_time),
+        announcements = values(announcements),
+        user_id = values(user_id),
+        exam_type = values(exam_type)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update exam
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="status != null">
+                status = #{status,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+            <if test="price != null and price != ''">
+                price = #{price},
+            </if>
+            <if test="applyStartTime != null">
+                apply_start_time = #{applyStartTime},
+            </if>
+            <if test="applyEndTime != null">
+                apply_end_time = #{applyEndTime},
+            </if>
+            <if test="announcements != null and announcements != ''">
+                announcements = #{announcements},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="examType != null">
+                exam_type = #{examType,typeHandler=com.exam.config.EnumValueTypeHandler},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from exam where id = #{id}
+    </delete>
+
+</mapper>
+
