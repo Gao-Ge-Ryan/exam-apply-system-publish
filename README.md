@@ -11,7 +11,7 @@
 2. 考试报名系统后台管理地址：http://82.157.42.25:2022
 3. 系统体验账户： 账号：admin@qq.com 密码：123456  
 4. 支付考试费用测试账号：支付宝支付账号：fynnto4071@sandbox.com 支付宝登陆密码和支付密码：111111
-5. [ **bilibili演示视频（B站）记得一赞三连哦！ **  ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
+5. [ **bilibili演示视频（B站）记得一赞三连哦**  ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 6. [  **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 
 ### 功能介绍
@@ -34,7 +34,7 @@
 
 ### 功能详情图
 
-[  :**考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
+[  **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 
 
 
