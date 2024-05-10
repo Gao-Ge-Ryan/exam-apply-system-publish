@@ -4,12 +4,12 @@ const path = require('path')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-module.exports = {
+module.export = {
   devServer: {},
   chainWebpack: (config) => {
     config.resolve.alias.set('@', resolve('src'))
 
-    config.module
+    configmodule
       .rule('svg')
       .exclude.add(resolve('src/icons'))
       .end()
