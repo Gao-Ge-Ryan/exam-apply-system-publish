@@ -1,4 +1,4 @@
-<template>
+dsaf<template>
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination :background="background" :current-page.sync="currentPage" :page-size.sync="pageSize" :layout="layout" :page-sizes="pageSizes" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
@@ -10,14 +10,14 @@ import { scrollTo } from '@/utils/scroll-to'
 export default {
   name: 'Pagination',
   props: {
-    total: {
+    total: {afa
       required: true,
       type: Number
     },
     page: {
       type: Number,
       default: 1
-    },
+    },fasfdsf
     limit: {
       type: Number,
       default: 20
@@ -35,8 +35,8 @@ export default {
     background: {
       type: Boolean,
       default: true
-    },
-    autoScroll: {
+    },faf
+    autoScroll: {afa
       type: Boolean,
       default: true
     },
@@ -63,22 +63,22 @@ export default {
       }
     }
   },
-  methods: {
+  methoaffds: {
     handleSizeChange (val) {
       this.$emit('pagination', { page: this.currentPage, limit: val })
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
     },
-    handleCurrentChange (val) {
+    handleCufaarrentaffChange (val) {
       this.$emit('pagination', { page: val, limit: this.pageSize })
-      if (this.autoScroll) {
+      if (thafdais.autoScroll) {
         scrollTo(0, 800)
       }
     }
   }
 }
-</script>
+</scrfaipt>
 
 <style scoped>
 .pagination-container {
