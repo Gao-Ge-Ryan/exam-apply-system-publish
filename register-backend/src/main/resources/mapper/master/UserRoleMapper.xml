@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.UserRoleMapper">
+    <resultMap type="top.gaogle.pojo.model.UserRoleModel" id="UserRoleMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, user_id, role_id, create_by, create_at, update_by, update_at, del_flag
+    </sql>
+    <insert id="insert">
+        insert into user_role(<include refid="sqlAllColumns"/>)
+        values (#{id},#{userId}, #{roleId}, #{createBy}, #{createAt}, #{updateBy}, #{updateAt}, #{delFlag})
+    </insert>
+    <delete id="deleteByRoleId">
+        delete
+        from user_role
+        where role_id = #{roleId}
+    </delete>
+    <delete id="deleteByUserId">
+        delete
+        from user_role
+        where user_id = #{userId}
+    </delete>
+    <select id="queryRoleIdByUserId" resultType="java.lang.String">
+        select role_id
+        from user_role
+        where user_id = #{userId}
+    </select>
+    <select id="queryUserIdsByRoleId" resultType="java.lang.String">
+        select user_id
+        from user_role
+        where role_id = #{roleId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.RoleAuthorityMapper">
+    <resultMap type="top.gaogle.pojo.model.RoleAuthorityModel" id="RoleAuthorityMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+        <result property="authorityModule" column="authority_module" jdbcType="VARCHAR"/>
+        <result property="authorityNum" column="authority_num" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, role_id, authority_module, authority_num, create_by, create_at, update_by, update_at, del_flag
+    </sql>
+    <insert id="insert">
+        insert into role_authority(<include refid="sqlAllColumns"/>)
+        values (#{id},#{roleId}, #{authorityModule}, #{authorityNum}, #{createBy}, #{createAt}, #{updateBy},
+        #{updateAt}, #{delFlag})
+    </insert>
+    <delete id="deleteByRoleId">
+        delete from role_authority where role_id =#{roleId}
+    </delete>
+
+    <select id="queryByRoleIds" resultMap="RoleAuthorityMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from role_authority
+        where role_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="queryByRoleId" resultMap="RoleAuthorityMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from role_authority
+        where role_id =#{roleId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册验证码</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header .style-register {
+            display: inline-block;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 15px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff7e5f, #feb47b); /* 渐变背景，颜色从橙红到浅橙 */
+            color: white;
+            text-align: center;
+            line-height: 1.2;
+            box-shadow: 0 4px 12px rgba(255, 126, 95, 0.4); /* 轻微的橙色阴影 */
+        }
+
+        .header h2 {
+            margin: 10px 0 0;
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .content {
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .content p {
+            margin: 0 0 20px;
+            color: #555555;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .code {
+            display: inline-block;
+            font-size: 32px;
+            color: #ffffff;
+            background: linear-gradient(90deg, #42e695, #3bb2b8); /* 渐变背景，颜色从浅绿到深青 */
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            letter-spacing: 4px;
+            box-shadow: 0 4px 12px rgba(66, 230, 149, 0.4); /* 轻微的绿色阴影 */
+            transition: background 0.3s, transform 0.3s; /* 加入缩放过渡效果 */
+        }
+
+        .code:hover {
+            background: linear-gradient(90deg, #3bb2b8, #42e695); /* 颜色方向反转 */
+            transform: scale(1.05); /* 鼠标悬停时略微放大 */
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .footer p {
+            color: #888888;
+            font-size: 12px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="style-register">style<br>register</div>
+        <h1>注册验证码</h1>
+    </div>
+    <div class="content">
+        <p>您好，感谢您注册本系统，您即将成为我们尊贵的用户。</p>
+        <p>您的验证码如下，请在5分钟内使用：</p>
+        <a class="code" th:text="${verificationCode}"></a>
+    </div>
+    <div class="footer">
+        <p>此邮件由系统自动发出，请勿直接回复。</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.UserMapper">
+    <resultMap type="top.gaogle.pojo.model.UserModel" id="UserMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="expireAt" column="expire_at" jdbcType="INTEGER"/>
+        <result property="lockAt" column="lock_at" jdbcType="INTEGER"/>
+        <result property="disabled" column="disabled" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id
+        , username, password, nickname, expire_at, lock_at, disabled, create_by, create_at, update_by, update_at, del_flag
+    </sql>
+
+    <sql id="sqlUserColumns">
+        u.id, u.username, u.password, u.nickname, u.expire_at, u.lock_at, u.disabled, u.create_by, u.create_at, u.update_by, u.update_at, u.del_flag
+    </sql>
+    <sql id="sqlExtraColumns">
+        u.id, u.username, u.password, u.nickname, u.expire_at, u.lock_at, u.disabled, u.create_by, u.create_at, u.update_by, u.update_at, u.del_flag,
+        r.id as r_id, r.name as r_name, r.description as r_description
+    </sql>
+    <sql id="sqlExtraTables">
+        left join user_role ur on ur.user_id = u.id
+        left join role r on r.id = ur.role_id
+    </sql>
+    <!--根据ID查询单个-->
+    <select id="selectOneById" resultMap="UserMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from user
+        where id = #{id}
+    </select>
+
+    <!--条件查询数据列表-->
+    <select id="selectMultiple" resultMap="UserMap">
+        select
+        <include refid="sqlUserColumns"/>
+        from user u
+        <where>
+            <if test="nickname != null and nickname != ''">
+                and u.nickname = #{nickname}
+            </if>
+            <if test="expireAt != null">
+                and u.expire_at = #{expireAt}
+            </if>
+            <if test="lockAt != null">
+                and u.lock_at = #{lockAt}
+            </if>
+            <if test="disabled != null">
+                and u.disabled = #{disabled}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and u.create_by = #{createBy}
+            </if>
+            <if test="createAt != null">
+                and u.create_at = #{createAt}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and u.update_by = #{updateBy}
+            </if>
+            <if test="updateAt != null">
+                and u.update_at = #{updateAt}
+            </if>
+            <if test="delFlag != null">
+                and u.del_flag = #{delFlag}
+            </if>
+            <if test="userIds != null and userIds.size > 0">
+                and u.id IN
+                <foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="search != null and search != ''">
+                <bind name="searchLike" value="'%' + search.toUpperCase() + '%'"/>
+                AND UPPER(u.username) LIKE #{searchLike}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                u.create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectByUsername" resultMap="UserMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="selectExistByUsername" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM user
+        where username = #{username}
+    </select>
+
+
+    <!--新增一条-->
+    <insert id="insertOne">
+        insert into user(<include refid="sqlAllColumns"/>)
+        values (#{id}, #{username}, #{password}, #{nickname}, #{expireAt}, #{lockAt}, #{disabled}, #{createBy},
+        #{createAt},
+        #{updateBy}, #{updateAt}, #{delFlag})
+    </insert>
+
+    <!--批量新增-->
+    <insert id="insertBatch">
+        insert into user(<include refid="sqlAllColumns"/>)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.username}, #{entity.password}, #{entity.nickname}, #{entity.expireAt},
+            #{entity.lockAt},
+            #{entity.disabled}, #{entity.createBy}, #{entity.createAt}, #{entity.updateBy}, #{entity.updateAt},
+            #{entity.delFlag})
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="patchOneById">
+        update user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="expireAt != null">
+                expire_at = #{expireAt},
+            </if>
+            <if test="lockAt != null">
+                lock_at = #{lockAt},
+            </if>
+            <if test="disabled != null">
+                disabled = #{disabled},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteOneById">
+        delete
+        from user
+        where id = #{id}
+    </delete>
+
+</mapper>

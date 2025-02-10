@@ -1,0 +1,147 @@
+# 本地运行后端服务使用的配置文件
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      # 系统库数据源
+      master:
+        url: jdbc:mysql://${DB_HOST:82.157.42.25}:${DB_PORT:3306}/${DB:style_register}?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        username: ${DB_USER:root}
+        password: ${DB_PWD:ePFOn7gH6Bp2SOhKIH2V7VHChlYiMGsnUmn1uSZ3Md9z/HJBJf40DDwowIE5tNysihA01q4NB76G+z07aovdUQ==}
+      # 动态表库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: true
+        url: jdbc:mysql://${DB_HOST:82.157.42.25}:${DB_PORT:3306}/${DB_SLAVE:style_register_slave}?useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        username: ${DB_USER:root}
+        password: ${DB_PWD:ePFOn7gH6Bp2SOhKIH2V7VHChlYiMGsnUmn1uSZ3Md9z/HJBJf40DDwowIE5tNysihA01q4NB76G+z07aovdUQ==}
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      connectProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALHwESUrxpFmQYzGwRqn2xpW79LC/MpDArc72qwPA2nSenkdkTrpf+MQtXnUJ+z1Tac1WYtZNFB45FBebtQdFRECAwEAAQ==
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: gaogle
+        login-password: gaogle
+      filter:
+        config:
+          # 是否配置加密
+          enabled: true
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    host: 82.157.42.25
+    port: 6379
+    password: Redis123
+    database: 0
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  mail:
+    # 配置 SMTP 服务器地址
+    host: smtp.qq.com
+    # 发送者邮箱
+    username: 3300755918@qq.com
+    # 配置密码，注意不是真正的密码，而是刚刚申请到的授权码
+    password: vwzlggxikjzwdagg
+    # 端口号465或587
+    port: 587
+    # 默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    # 配置SSL 加密工厂
+    properties: # 设置邮件超时时间防止服务器阻塞
+      timeout: 5000
+      connection-timeout: 5000
+      write-timeout: 5000
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        #表示开启 DEBUG 模式，这样，邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: true
+server:
+  port: 8080
+#  servlet:
+#    # 应用的访问路径
+#    context-path: /gaogle
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+gaogle:
+  author: 高歌
+  # 获取ip地址开关
+  addressEnabled: true
+minio:
+  endpoint: http://82.157.42.25
+  port: 9001
+  access-key: minio
+  secret-key: Minio123
+  secure: false
+  bucket-name-public: style-register-public
+  bucket-name-private: style-register-private
+  image-size: 1048576000
+  file-size: 1073741824
+alipay:
+  # 支付宝网关地址
+  openApiDomain: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+  # 支付宝网关名、partnerId和appId
+  appId: 902100013669330212
+  pid: 2088721035467935222
+  # RSA私钥、公钥和支付宝公钥
+  #此处请填写你的应用私钥且转PKCS8格式
+  privateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwwesRsssqwqwWEWEsssERsWssyuyrewrweruyeewerwuggSjAgEAAoIBAQCplRPvCx518ZIjq5WyTw0AwerwereDs/uUM5u+LwerwerV+13xiryCfIdVnavIqRTijwJWE3z2U189xeP5VqrhkidQPNrvJhMCBBcTtRdyyZb6JEL+XHDo7nZ3quNACr9WxerTzoB6wM74kIc6hM/QAE1uFEDW3h88UxEERmJhp6H8pooj+72Ut3huWOS3WDRvVfLzeVRRS8cAzDsRg5hxneigPnnU+IhpdGN2CODUFUw3sj/kh5JD9Nseyk55Buuhez08cc8vd+rbfBb2gyQBjgsBDEoZ0okXOq0TFnSWdJkPsqKLqAXf0U9ekoG0m9YeTruLVqMvr7ousLswqQFAh0mNQrQ1mYJUNAgMBAAECggEAdBGNKze5CZDmLXPrabehdkCtILg+EsY3szFZ+VFUSpalsbsJNNVcBvhxXhhN1epAGbJuocPPoUCU3DTiIvOxrp18Q8plW9U3rCjCeXLgiJ1A0L7d4HjpEiiiYX1eg8tmgOSCwOMGRmb5ZQHLQmq52cTZpGmFKDfxkVWl3peL8O/Lh+UNe1DvuEV2MAjnrQklt4nEc3TXf5rqyC3mhenoueR0augclYM/oTHRKgl+XUHUwfhp9OGCv5jrgjP0WYO8wrk6wIIGdttAbU2dHNGmJSXyPb8nLaqu1jAJTdBgGoSC2R2F5b+sWsicqWRfnOYi3UkpLZ54ugjL8TZ+o0DyIQKBgQD1BxI3+t7FFVvkxQrg7fbHqyH4XEpSMJlpnteHtH4rEfOJZF0hppkGVCAiXWT/VTuS86NksKK01QA5Gqtduj2ptaTasUl2/OUxthvW4iCCchxdyjMPvHJ0GYjYcoFj3ZgWqDverQP8W9t/v47LOreR4wGUViD5j4xqhTLqopE1vwKBgQCxLR9xIOiaXKhFsL1w877qdvGFxHPqDsbvF+yaPLSbfail+9C24c87HfnY5DcEcg8Z4LH4v7yGFIpO+Cb+nQyYm4hwpUcn6uuWz7nD6+ko6Pn40B+XJsaNHVLWq2cpWTrJiZAS0WQV9NF4/Yg2pt0ISQodz5q2oZr/REWtMAUgMwKBgQCK2qX9aUJi51a7Dtq6WsAVqKpIh2xqpTXa//Pd6G/zUmnzexe34SQozPWk484/T/rBrSX0ApFB7s8AjVd9dvRIvzIb6IncTzZG9I9UN7L6mVXv5I0JJt6pYmsFVeZzRHlSpaW/68YtdZSvEUwHaU/r8XvMpv5qzmlhV/hhtRybGwKBgFzELXREMMWxwgFLOsVLOij1Qhwx8icYuZwyQJW5Ny86qfTOVkeLD7/6P/kJ9KyFM9buyQBfE8x4MLqMP46MmC3HMbcZMpp57AQ4myE0Ag6DfW6DOicgDFGSiu8PK6KAr8EaH69apza/ynW4+Xrz/0L5Syy0qGL7VnZVPs4hGG31AoGAE3STqMU6SXnijbf8CkNrHktjGajrfVt3X+rLCNvDCQ7YkCLjMVobexAxi3KbG824y/Or+lToNargKPLf4q8lxkQh2Fhq+CO9xzAT6RV49tLzkqlg3ghbC036H99I4gD08dccnOtkpp7vQ+lNL3tOZu78oV/2KngKBw4TIwEylzU=
+  #此处请填写你的应用公钥
+  publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBssqwwsRsqRwsdfqsssCgKCAQEAwerwrqZUT7yuryyuryuwsedfGSI6uVsk8NAA7P7lDObvi1ftd8Ywerwerwq8gnyHVZ2ryKkU4o8CVhN89lNfPcXj+Vaq4ZInUDza7yYTAgQXE7UXcsmW+iRC/lxw6O52d6rjQAq/VsXq086AesDO+JCHOoTP0ABNbhRA1t4fPFMRBEZiYaeh/KaKI/u9lLd4bljkt1g0b1Xy83lUUUvHAMw7EYOYcZ3ooD551PiIaXRjdgjg1BVMN7I/5IeSQ/TbHspOeQbroXs9PHHPL3fq23wW9oMkAY4LAQxKGdKJFzqtExZ0lnSZD7Kii6gF39FPXpKBtJvWHk67i1ajL6+6LrC7MKkBQIdJjUK0NZmCVDQIDAQAB
+  #SHA256withRsa对应支付宝公钥
+  alipayPublicKey: MIIBIjANBg1kqhkiG9w0BAQEFAAOCAQ8AMIIBCwerwrgKCAQEAs4iSr4wWFhz2rrtyBzfNrK9g29RrhuyEAcIwerewrweattBjkqI0ono9nh6rlmckMfc9pu7LTySaoy0L2g6wjA0lMqz9aGkTdpq59wVyhxfgAndoUf2gSNma/s98XpkGgzfV0ZcSFRNp+Ui4YOa8Ziymzo8aZwBMd/Z/fuzHNTHbFkv0mF7n0tyz0keeRg8Xj9tvQ0WLuUsXeiAl08yWuV1c1NGofabrqx42QBshbvIiyvXkQrBLnIFvgKcJFyeaClROeKoEj514CF1zVeca1cbvpBdKvfWaDG15RtBlPqaW/P5u16TnUoohDRDbKlLpPBUEeYIvHZeQL1nNXBwtQ9g31GIpcNYGYQIDAQAB
+  # 签名类型: RSA->SHA1withRsa,RSA2->SHA256withRsa
+  signType: RSA2
+  #异步通知url(注意拦截器是否拦截)
+  notifyUrl: http://82.157.42.25/gaogle/alipay/notify_url
+  returnUrl: http://82.157.42.25/gaogle/alipay/return_url
+  frontendUrl: http://82.157.42.25:81/exam
+  enterpriseNotifyUrl: http://82.157.42.25/gaogle/alipay/enterprise_notify_url
+  enterpriseReturnUrl: http://82.157.42.25/gaogle/alipay/enterprise_return_url
+  enterpriseFrontendUrl: http://82.157.42.25:81/billing/list
+  clientNotifyUrl: http://82.157.42.25/gaogle/alipay/client_notify_url
+  clientReturnUrl: http://82.157.42.25/gaogle/alipay/client_return_url
+  clientFrontendUrl: http://82.157.42.25:81/exam

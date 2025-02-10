@@ -1,0 +1,160 @@
+﻿# Docker Compose 的 YAML 文件包含 4 个一级 key:version、services、networks、volumes
+# version 是必须指定的，而且总是位于文件的第一行。它定义了 Compose 文件格式(主要是 API)的版本。注意，version 并非定义 Docker Compose 或 Docker 引擎的版本号。
+version: "3.3"
+# services 用于定义不同的应用服务
+services:
+  # Mysql数据库-8.0.21版本
+  database:
+    image: mysql:exam-8.0.21
+    container_name: gaogle-Mysql-8.0.21
+    # /var/log/mysql是MySQL服务器默认的日志文件目录，它存储了MySQL服务器运行过程中产生的日志信息。MySQL服务器的日志功能包括错误日志、二进制日志、查询日志和慢查询日志等，这些日志文件对于诊断和监控MySQL服务器非常有用
+    # /var/lib/mysql是MySQL服务器默认的数据目录，它存储了MySQL服务器中的数据库、表和数据等信息。在Docker Compose文件中，通过将本地目录与MySQL容器内的/var/lib/mysql目录进行挂载，可以将MySQL容器内的数据持久化到本地目录中，方便后续恢复和备份。这样，在容器重启或重新创建时，可以通过挂载到本地目录的数据来恢复MySQL服务器中的数据库和表等信息。
+    volumes:
+      - ./exam-backend/db/logs:/var/log/mysql
+      - ./exam-backend/db/data:/var/lib/mysql
+    # 启动MySQL容器时，Docker Compose会将该环境变量传递给容器，并将其作为MYSQL_ROOT_PASSWORD环境变量设置在容器中，以便MySQL服务器在启动时自动使用该密码进行根用户的身份验证。
+    environment:
+      - MYSQL_ROOT_PASSWORD=Mysql123
+    ports:
+      - "3306:3306"
+    networks:
+      - exam_net
+  # Redis最新镜像
+  redis:
+    image: redis:latest
+    container_name: gaogle-Redis-latest
+    # /data是Redis容器中数据存储的路径。这样，当Redis容器启动时，Redis数据将被保存到本地目录中，以便在容器被重新启动时能够恢复数据。
+    # 如果使用AOF持久化方式，还需要将日志文件保存到本地目录中, /aof是Redis容器中AOF日志文件的存储路径。
+    command: redis-server --requirepass Redis123
+    volumes:
+      - ./exam-backend/redis/data:/data
+      - ./exam-backend/redis/aof:/aof
+    environment:
+      - REDIS_PASSWORD=Redis123
+    ports:
+      - "6379:6379"
+    networks:
+      - exam_net
+  # Mongodb 数据库
+  mongodb:
+    image: mongo:latest
+    container_name: gaogle-Mongodb-latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./exam-backend/mongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=Mongodb123
+    networks:
+      - exam_net
+  # es搜索引擎
+  elasticsearch:
+    image: elasticsearch:7.14.0
+    container_name: gaogle-Elasticsearch-7.14.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./exam-backend/es/data:/usr/share/elasticsearch/data
+      - ./exam-backend/es/plugins/ik:/usr/share/elasticsearch/plugins/ik
+    environment:
+      - discovery.type=single-node
+    networks:
+      - exam_net
+  # kibana
+  kibana:
+    image: kibana:7.14.0
+    container_name: gaogle-Kibana-7.14.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - exam_net
+  # rabbitmq (问题：访问15672界面报错，可以进入容器内部执行 "rabbitmq-plugins enable rabbitmq_management")
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: gaogle-rabbitmq-3.8-management
+    volumes:
+      - ./exam-backend/rabbitmq/data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=Rabbitmq123
+    networks:
+      - exam_net
+  # 考试报名系统后端服务
+  exam-backend:
+    image: exam-backend:latest
+    container_name: gaogle-exam-backend
+    # 依赖于"database"和"redis"两个服务
+    depends_on:
+      - database
+      - redis
+      - mongodb
+      - elasticsearch
+      - kibana
+      - rabbitmq
+    # 该服务定义了多个环境变量，包括"REDIS_HOST"、"DB_USER"、"DB_PWD"、"DB_HOST"和"DB_NAME"等，这些变量将被传递给容器，以用于配置该服务中的应用程序。
+    environment:
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PWD=Mysql123
+      - DB_NAME=exam_registration
+      # 这个环境变量的作用是告诉容器中的应用程序，Redis服务的地址是"redis"。这是因为在这个Docker Compose文件中，同时定义了一个名为"redis"的Redis服务，因此在同一个网络中的其他服务可以通过"redis"这个服务名来访问Redis服务。
+      - REDIS_HOST=redis
+      - REDIS_PWD=Redis123
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      # mongodb连接信息
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_NAME=exam_registration
+      - MONGODB_USER=root
+      - MONGODB_PWD=Mongodb123
+      # es 连接信息
+      - ES_HOST=elasticsearch
+      - ES_PORT=9300
+      # rabbitmq连接信息
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=root
+      - RABBITMQ_PWD=Rabbitmq123
+    ports:
+      - "6666:6666"
+    networks:
+      - exam_net
+    # 该服务定义了一个command，即"/opt/exam_backend/start-v1.sh"，该命令将在容器启动时执行，以启动该服务的应用程序
+    command: /opt/exam_backend/start-v1.sh
+  # Nginx代理后端服务API接口(转发)
+  nginx:
+    image: nginx:latest
+    container_name: gaogle-nginx-latest
+    # 依赖考试报名系统后端服务
+    depends_on:
+      - exam-backend
+    # "/etc/nginx/conf.d"是默认的Nginx配置文件目录之一。在这个目录下，可以存放各种Nginx的配置文件，如".conf"或".conf.d"等。
+    # 在Nginx中，并没有默认的"/etc/nginx/certs"目录，但是这个目录在许多Nginx配置中被用作存储SSL/TLS证书的目录。
+    # 在Nginx中，SSL/TLS证书通常存储在PEM格式的文件中，这些文件通常被放置在服务器的"/etc/nginx/certs"目录中。
+    volumes:
+      - ./exam-backend/nginx/conf.d:/etc/nginx/conf.d
+      - ./exam-backend/nginx/certs:/etc/nginx/certs
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - exam_net
+  #考试报名系统后台管理服务
+  exam-admin-side:
+    image: exam-admin-side:latest
+    container_name: gaogle-exam-admin-side
+    ports:
+      - "9999:9999"
+# 这个配置片段定义了一个名为 "exam_net" 的网络，并将其驱动程序设置为 "bridge"。这个网络可以用来允许在同一个 Docker 主机内运行的容器使用桥接网络驱动程序相互通信。
+networks:
+  exam_net:
+    driver: bridge

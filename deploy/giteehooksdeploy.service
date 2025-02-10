@@ -1,0 +1,22 @@
+"giteehooksdeploy.service" 22L, 546C                                                                                                                                                         15,1         全部
+[Unit]
+Description=gitee webhooks deploy
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/giteehooksdeploy
+Restart=always
+User=root
+Group=root
+# Set environment variables for Gradle and Go
+Environment=GRADLE_HOME=/home/gradle-4.7
+Environment=GO_HOME=/opt/module/go
+Environment=GOPATH=/mnt/go
+Environment=NODE_HOME=/usr/local/node
+Environment=PATH=/home/gradle-4.7/bin:/opt/module/go/bin:/usr/local/node/bin:/usr/bin:$PATH
+WorkingDirectory=/usr/local/bin
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

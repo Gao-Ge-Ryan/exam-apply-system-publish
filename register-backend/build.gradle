@@ -1,0 +1,63 @@
+buildscript {
+    ext {
+        springBootVersion = '2.5.15'
+    }
+
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.15'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.exam'
+version = '1.0.0-GA'
+sourceCompatibility = '1.8'
+
+repositories {
+    maven { url "https://maven.aliyun.com/repository/public" }
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    dependencyVersions = [
+            elasticsearch : '7.14.0',
+            mysqlConnector: '8.0.21',
+            mybatis: '2.3.1',
+            pagehelper: '1.4.7'
+    ]
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'mysql:mysql-connector-java:' + project.dependencyVersions.mysqlConnector
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:' + project.dependencyVersions.mybatis
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:' + project.dependencyVersions.pagehelper
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.alibaba:druid-spring-boot-starter:1.2.23'
+    implementation 'io.minio:minio:8.2.1'
+    implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
+    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
+    implementation 'com.alibaba:easyexcel:4.0.3'
+    implementation 'com.alipay.sdk:alipay-sdk-java:4.40.30.ALL'
+}
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Style-Register制准考证</title>
+    <style>
+        .editor-content-view {
+            padding: 0 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+
+
+        }
+
+        p,
+        li {
+            white-space: pre-wrap; /* 保留空格 */
+        }
+
+        blockquote {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f1f1f1;
+            border-left: 8px solid #d0e5f2;
+        }
+
+        code {
+            padding: 3px;
+            font-family: monospace;
+            background-color: #eee;
+            border-radius: 3px;
+        }
+
+        pre > code {
+            display: block;
+            padding: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+
+        td,
+        th {
+            min-width: 50px;
+            height: 20px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        input[type='checkbox'] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <h2 style="text-align: center"><span th:text="${title}"></span></h2>
+    <div th:utext="${noticeHtml}"></div>
+</div>
+</body>
+</html>

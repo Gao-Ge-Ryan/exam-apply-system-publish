@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.SysJobLogMapper">
+
+    <resultMap type="top.gaogle.pojo.domain.SysJobLog" id="SysJobLogMap">
+        <result property="jobLogId" column="job_log_id" jdbcType="INTEGER"/>
+        <result property="jobName" column="job_name" jdbcType="VARCHAR"/>
+        <result property="jobGroup" column="job_group" jdbcType="VARCHAR"/>
+        <result property="invokeTarget" column="invoke_target" jdbcType="VARCHAR"/>
+        <result property="jobMessage" column="job_message" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="exceptionInfo" column="exception_info" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="stopTime" column="stop_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        job_log_id, job_name, job_group, invoke_target, job_message, status, exception_info, create_time
+    </sql>
+
+
+    <insert id="insertJobLog">
+        insert into sys_job_log(job_name, job_group, invoke_target, job_message, status, exception_info, start_time,
+                                stop_time, create_time)
+        values (#{jobName}, #{jobGroup}, #{invokeTarget}, #{jobMessage}, #{status}, #{exceptionInfo}, #{startTime},
+                #{stopTime}, #{createTime})
+    </insert>
+
+</mapper> 

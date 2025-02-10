@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.EnterpriseBillMapper">
+
+    <resultMap type="top.gaogle.pojo.model.EnterpriseBillModel" id="EnterpriseBillMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="enterpriseId" column="enterprise_id" jdbcType="VARCHAR"/>
+        <result property="balance" column="balance" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="alipayTradeStatus" column="alipay_trade_status" jdbcType="VARCHAR"/>
+        <result property="alipayTradeNo" column="alipay_trade_no" jdbcType="VARCHAR"/>
+        <result property="amount" column="amount" jdbcType="INTEGER"/>
+        <result property="alipayTimeExpire" column="alipay_time_expire" jdbcType="VARCHAR"/>
+        <result property="alipayTimeExpireAt" column="alipay_time_expire_at" jdbcType="INTEGER"/>
+        <result property="completionAt" column="completion_at" jdbcType="INTEGER"/>
+        <result property="subject" column="subject" jdbcType="VARCHAR"/>
+        <result property="comment" column="comment" jdbcType="VARCHAR"/>
+        <result property="systemComment" column="system_comment" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, enterprise_id, balance, type, status, alipay_trade_status, amount, alipay_time_expire, alipay_time_expire_at, completion_at, subject,comment,system_comment, create_by, create_at, update_by, update_at
+    </sql>
+
+    <insert id="insert">
+        insert into enterprise_bill(<include refid="sqlAllColumns"/>)
+        values (#{id},#{enterpriseId}, #{balance}, #{type}, #{status}, #{alipayTradeStatus}, #{amount},
+        #{alipayTimeExpire}, #{alipayTimeExpireAt}, #{completionAt}, #{subject},#{comment},#{systemComment},
+        #{createBy}, #{createAt}, #{updateBy},
+        #{updateAt})
+    </insert>
+
+    <update id="updateStatusById">
+        update enterprise_bill
+        set status=#{status},
+            alipay_trade_status=#{tradeStatus},
+            alipay_trade_no=#{tradeNo},
+            completion_at=#{completionAt},
+            balance =#{balance}
+        where id = #{id}
+    </update>
+    <update id="updateBalanceAndStatusByBillId">
+        UPDATE enterprise e
+            JOIN enterprise_bill eb ON eb.enterprise_id = e.id
+        SET e.balance             = IFNULL(e.balance, 0) + #{amount},
+            eb.balance            = IFNULL(e.balance, 0) + #{amount},
+            eb.status             = #{status},
+            eb.alipay_trade_status=#{tradeStatus},
+            eb.alipay_trade_no=#{tradeNo},
+            eb.completion_at=#{completionAt}
+        WHERE (eb.status != #{status} OR eb.status IS NULL)
+          AND eb.id = #{enterpriseBillId};
+    </update>
+    <select id="queryOneById" resultMap="EnterpriseBillMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from enterprise_bill
+        where id = #{id}
+    </select>
+
+    <select id="enterpriseQueryByPage" resultMap="EnterpriseBillMap">
+        select
+        id, balance, type, alipay_trade_status,alipay_trade_no, amount, completion_at, subject,comment,system_comment,
+        create_by
+        from enterprise_bill
+        <where>
+            and enterprise_id = #{enterpriseId}
+            and status =#{status}
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+        ORDER BY completion_at DESC
+    </select>
+
+
+</mapper>

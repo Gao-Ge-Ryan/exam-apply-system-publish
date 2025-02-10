@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.OperateLogMapper">
+    <resultMap type="top.gaogle.pojo.domain.OperateLog" id="OperateLogMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="businessType" column="business_type" jdbcType="INTEGER"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+        <result property="operateType" column="operate_type" jdbcType="INTEGER"/>
+        <result property="operator" column="operator" jdbcType="VARCHAR"/>
+        <result property="enterpriseId" column="enterprise_id" jdbcType="VARCHAR"/>
+        <result property="operateUrl" column="operate_url" jdbcType="VARCHAR"/>
+        <result property="operateIp" column="operate_ip" jdbcType="VARCHAR"/>
+        <result property="operateLocation" column="operate_location" jdbcType="VARCHAR"/>
+        <result property="operateParam" column="operate_param" jdbcType="VARCHAR"/>
+        <result property="jsonResult" column="json_result" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="errorMsg" column="error_msg" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="costTime" column="cost_time" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, title, business_type, method, request_method, operate_type, operator, enterprise_id, operate_url, operate_ip, operate_location, operate_param, json_result, status, error_msg, create_at, cost_time
+    </sql>
+    <insert id="insert">
+        insert into operate_log(<include refid="sqlAllColumns"/>)
+        values (#{id},#{title}, #{businessType}, #{method}, #{requestMethod}, #{operateType}, #{operator},
+        #{enterpriseId}, #{operateUrl}, #{operateIp}, #{operateLocation}, #{operateParam}, #{jsonResult}, #{status},
+        #{errorMsg}, #{createAt}, #{costTime})
+    </insert>
+
+    <select id="queryByPageAndCondition" resultMap="OperateLogMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from operate_log
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="businessType != null">
+                and business_type = #{businessType}
+            </if>
+            <if test="method != null and method != ''">
+                and method = #{method}
+            </if>
+            <if test="requestMethod != null and requestMethod != ''">
+                and request_method = #{requestMethod}
+            </if>
+            <if test="operateType != null">
+                and operate_type = #{operateType}
+            </if>
+            <if test="operator != null and operator != ''">
+                and operator = #{operator}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+            <if test="operateUrl != null and operateUrl != ''">
+                and operate_url = #{operateUrl}
+            </if>
+            <if test="operateIp != null and operateIp != ''">
+                and operate_ip = #{operateIp}
+            </if>
+            <if test="operateLocation != null and operateLocation != ''">
+                and operate_location = #{operateLocation}
+            </if>
+            <if test="operateParam != null and operateParam != ''">
+                and operate_param = #{operateParam}
+            </if>
+            <if test="jsonResult != null and jsonResult != ''">
+                and json_result = #{jsonResult}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="errorMsg != null and errorMsg != ''">
+                and error_msg = #{errorMsg}
+            </if>
+            <if test="costTime != null">
+                and cost_time = #{costTime}
+            </if>
+            <!-- 模糊搜索 -->
+            <if test="search != null">
+                <bind name="searchValue" value="'%' + search + '%'"/>
+                and (
+                title like #{searchValue}
+                or operate_param like #{searchValue}
+                or json_result like #{searchValue}
+                )
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>

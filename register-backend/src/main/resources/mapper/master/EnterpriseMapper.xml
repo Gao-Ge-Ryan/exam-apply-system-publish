@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.EnterpriseMapper">
+    <resultMap type="top.gaogle.pojo.model.EnterpriseModel" id="EnterpriseMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="logo" column="logo" jdbcType="VARCHAR"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="creditCode" column="credit_code" jdbcType="VARCHAR"/>
+        <result property="balance" column="balance" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="slideshow" column="slideshow" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, name, logo,slideshow,reason,status, description, credit_code, balance, create_by, create_at, update_by, update_at
+    </sql>
+    <insert id="insert">
+        insert into enterprise(<include refid="sqlAllColumns"/>)
+        values (#{id},#{name},#{logo},#{slideshow},#{reason}, #{status}, #{description}, #{creditCode}, #{balance}, #{createBy}, #{createAt},
+        #{updateBy}, #{updateAt})
+    </insert>
+    <update id="putEnterprise">
+        update enterprise
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="logo != null and logo != ''">
+                logo = #{logo},
+            </if>
+            <if test="slideshow != null and slideshow != ''">
+                slideshow = #{slideshow},
+            </if>
+            <if test="reason != null and reason != ''">
+                reason = #{reason},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="creditCode != null and creditCode != ''">
+                credit_code = #{creditCode},
+            </if>
+            <if test="balance != null">
+                balance = #{balance},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="enterprisePutEnterprise">
+        update enterprise
+        <set>
+            <if test="logo != null and logo != ''">
+                logo = #{logo},
+            </if>
+            <if test="slideshow != null and slideshow != ''">
+                slideshow = #{slideshow},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateBalanceById">
+        update enterprise
+        set balance = #{lastBalance}
+        where id = #{enterpriseId}
+    </update>
+    <delete id="deleteById">
+        delete
+        from enterprise
+        where id = #{id}
+    </delete>
+    <select id="queryByPageAndCondition" resultMap="EnterpriseMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from enterprise
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="creditCode != null and creditCode != ''">
+                and credit_code = #{creditCode}
+            </if>
+            <if test="balance != null">
+                and balance = #{balance}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="createAt != null">
+                and create_at = #{createAt}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+            <if test="updateAt != null">
+                and update_at = #{updateAt}
+            </if>
+            <if test="search != null and search != ''">
+                <bind name="searchLike" value="'%' + search.toUpperCase() + '%'"/>
+                AND UPPER(name) LIKE #{searchLike}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+    <select id="queryOneById" resultMap="EnterpriseMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from enterprise
+        where id = #{id}
+    </select>
+    <select id="queryAllByAndCondition" resultMap="EnterpriseMap">
+        select
+        id, name, logo
+        from enterprise
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="creditCode != null and creditCode != ''">
+                and credit_code = #{creditCode}
+            </if>
+            <if test="balance != null">
+                and balance = #{balance}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="createAt != null">
+                and create_at = #{createAt}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+            <if test="updateAt != null">
+                and update_at = #{updateAt}
+            </if>
+            <if test="search != null and search != ''">
+                <bind name="searchLike" value="'%' + search.toUpperCase() + '%'"/>
+                AND UPPER(name) LIKE #{searchLike}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+    <select id="queryByCreateBy" resultMap="EnterpriseMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from enterprise where create_by = #{createBy}
+    </select>
+    <select id="queryByAccountBy" resultMap="EnterpriseMap">
+        select
+        e.id
+        from enterprise e
+        left join enterprise_user eu
+        on e.id = eu.enterprise_id
+        where e.create_by = #{accountBy} or eu.account_by =#{accountBy}
+    </select>
+    <select id="clientQueryByPage" resultMap="EnterpriseMap">
+        select id,
+               name,
+               description,
+               logo
+        from enterprise
+        where status = 3
+    </select>
+    <select id="clientQueryEnterprise" resultMap="EnterpriseMap">
+        select
+               id,
+               name,
+            description,
+            logo,slideshow
+        from enterprise where id = #{enterpriseId}
+    </select>
+    <select id="queryBalanceById" resultType="java.lang.Long">
+        select balance
+        from enterprise
+        where id = #{enterpriseId} for update
+    </select>
+
+</mapper>

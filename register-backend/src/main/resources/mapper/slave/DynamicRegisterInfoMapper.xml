@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.slave.DynamicRegisterInfoMapper">
+
+    <resultMap type="top.gaogle.pojo.model.DynamicRegisterInfoModel" id="DynamicRegisterInfoMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="approve" column="approve" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="idNumber" column="id_number" jdbcType="VARCHAR"/>
+        <result property="admissionTicketNumber" column="admission_ticket_number" jdbcType="VARCHAR"/>
+        <result property="photo" column="photo" jdbcType="VARCHAR"/>
+        <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="spot" column="spot" jdbcType="VARCHAR"/>
+        <result property="spotAddress" column="spot_address" jdbcType="VARCHAR"/>
+        <result property="roomNumber" column="room_number" jdbcType="VARCHAR"/>
+        <result property="seatNumber" column="seat_number" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="VARCHAR"/>
+        <result property="education" column="education" jdbcType="VARCHAR"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="sqlAllColumns">
+        id, reason, approve,status, score, name,id_number ,admission_ticket_number, photo, phone_number, email, spot,spot_address, room_number, seat_number, gender,education,major,create_by, create_at, update_by, update_at
+    </sql>
+    <insert id="insertDynamic" parameterType="map">
+        INSERT INTO ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="keys" item="key" separator=",">
+                ${key}
+            </foreach>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <foreach collection="values" item="value" separator=",">
+                #{value}
+            </foreach>
+        </trim>
+    </insert>
+
+    <delete id="deleteDynamic" parameterType="map">
+        DELETE FROM ${tableName}
+        <where>
+            <foreach collection="conditions" item="condition" separator=" AND ">
+                ${condition.key} = #{condition.value}
+            </foreach>
+        </where>
+    </delete>
+
+    <update id="updateDynamic" parameterType="map">
+        UPDATE ${tableName}
+        <set>
+            <foreach collection="setClauses" item="clause" separator=",">
+                ${clause.key} = #{clause.value}
+            </foreach>
+        </set>
+        <where>
+            <foreach collection="conditions" item="condition" separator=" AND ">
+                ${condition.key} = #{condition.value}
+            </foreach>
+        </where>
+    </update>
+    <update id="createTableDynamic">
+        CREATE TABLE IF NOT EXISTS ${tableName} (
+        id VARCHAR(255) NOT NULL,
+        `name` varchar(255) NULL DEFAULT NULL COMMENT '姓名',
+        `id_number` varchar(255) NULL DEFAULT NULL COMMENT '证件号码',
+        `admission_ticket_number` varchar(255) NULL DEFAULT NULL COMMENT '准考证号',
+        `photo` varchar(255) NULL DEFAULT NULL COMMENT '照片',
+        `phone_number` varchar(255) NULL DEFAULT NULL COMMENT '手机号',
+        `email` varchar(255) NULL DEFAULT NULL COMMENT '邮箱',
+        `spot_id` varchar(255) NULL DEFAULT NULL COMMENT '考点id',
+        `spot` varchar(255) NULL DEFAULT NULL COMMENT '考点',
+        `spot_address` varchar(255) NULL DEFAULT NULL COMMENT '考点地址',
+        `room_number` varchar(255) NULL DEFAULT NULL COMMENT '考场号',
+        `seat_number` varchar(255) NULL DEFAULT NULL COMMENT '座号',
+        `gender` varchar(255) NULL DEFAULT NULL COMMENT '性别',
+        `education` varchar(255) NULL DEFAULT NULL COMMENT '学历',
+        `major` varchar(255) NULL DEFAULT NULL COMMENT '专业',
+        <foreach collection="columns" item="column" separator=",">
+            ${column.name} ${column.type}
+            <if test="column.comment != null and column.comment != ''">
+                COMMENT '${column.comment}'
+            </if>
+        </foreach>
+        ,
+        `score` varchar(255) NULL DEFAULT NULL COMMENT '成绩',
+        `status` int(11) NULL DEFAULT NULL COMMENT '状态:0初始化，1有效，2无效，3手动处理',
+        `approve` int(11) NULL DEFAULT NULL COMMENT '审核状态:0待审核，1审核通过,2审核失败',
+        `reason` text NULL DEFAULT NULL COMMENT '理由',
+        `create_by` varchar(255) NULL DEFAULT NULL COMMENT '创建者',
+        `create_at` bigint(20) NULL DEFAULT NULL COMMENT '创建时间',
+        `update_by` varchar(255) NULL DEFAULT NULL COMMENT '修改者',
+        `update_at` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
+        PRIMARY KEY (id) USING BTREE
+        )
+    </update>
+    <update id="updateScoreByUnicode">
+        UPDATE ${tableName}
+        set score     =#{score},
+            update_by =#{updateBy},
+            update_at =#{updateAt}
+        where id =#{id} and id_number =#{idNumber} and admission_ticket_number=#{admissionTicketNumber}
+    </update>
+
+    <update id="updateStatusByCreateBy">
+        UPDATE ${tableName}
+        set status=#{status}
+        where create_by = #{createBy}
+    </update>
+
+    <select id="selectDynamic" resultType="java.util.Map">
+        SELECT
+        <foreach collection="fields" item="field" separator=",">
+            ${field}
+        </foreach>
+        FROM ${tableName}
+        <where>
+            <foreach collection="conditions" item="condition" separator=" AND ">
+                <choose>
+                    <when test="condition.matchType == 'exact'">
+                        ${condition.key} = #{condition.value}
+                    </when>
+                    <when test="condition.matchType == 'like'">
+                        ${condition.key} LIKE CONCAT('%', #{condition.value}, '%')
+                    </when>
+                </choose>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectDynamicByQueryParam" resultType="java.util.Map">
+        SELECT
+        <foreach collection="fields" item="field" separator=",">
+            ${field}
+        </foreach>
+        FROM ${tableName}
+        <where>
+            <if test="queryParam.status != null">
+                and status = #{queryParam.status}
+            </if>
+            <foreach collection="conditions" item="condition" separator=" AND ">
+                <choose>
+                    <when test="condition.matchType == 'exact'">
+                        ${condition.key} = #{condition.value}
+                    </when>
+                    <when test="condition.matchType == 'like'">
+                        ${condition.key} LIKE CONCAT('%', #{condition.value}, '%')
+                    </when>
+                </choose>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectWithJointDynamic" resultType="java.util.Map">
+        SELECT
+        <foreach collection="fields" item="field" separator=",">
+            ${field}
+        </foreach>
+        FROM ${tableName}
+        left join
+        <where>
+            <foreach collection="conditions" item="condition" separator=" AND ">
+                <choose>
+                    <when test="condition.matchType == 'exact'">
+                        ${condition.key} = #{condition.value}
+                    </when>
+                    <when test="condition.matchType == 'like'">
+                        ${condition.key} LIKE CONCAT('%', #{condition.value}, '%')
+                    </when>
+                </choose>
+            </foreach>
+        </where>
+    </select>
+    <select id="obtainAdmissionTicket" resultMap="DynamicRegisterInfoMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from ${tableName}
+        where create_by =#{createBy}
+    </select>
+    <select id="selectBaseInfoByRegisterPublishId" resultMap="DynamicRegisterInfoMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from ${tableName}
+    </select>
+
+
+</mapper>

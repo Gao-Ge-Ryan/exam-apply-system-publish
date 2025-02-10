@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Style-Register制准考证</title>
+    <style>
+        @page {
+            size: A4 landscape; /* 设置为A4横向 */
+            margin: 0; /* 无页边距 */
+        }
+
+        html, body {
+            font-family: 'simsun', serif;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+        }
+
+        #content {
+            width: 100%;
+            max-width: 95%; /* 调整宽度以适应A4页面 */
+            max-height: 95%; /* 调整高度以适应A4页面 */
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-left: 27px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            table-layout: fixed; /* 防止表格超出一页 */
+        }
+
+        table, td, th {
+            border: 1px solid #555;
+            padding: 3px 5px;
+            word-wrap: break-word; /* 避免文字溢出 */
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #eff3fa;
+        }
+
+        .photo-wrapper {
+            text-align: center;
+        }
+
+        .photo-wrapper .photo {
+            width: 80px;
+            height: 110px;
+            margin: 0px auto;
+        }
+
+        .box-left p {
+            margin: 24px 0px;
+            font-size: 16px;
+        }
+
+        .box p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5em;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <table>
+        <tr>
+            <!-- 信息框 -->
+            <td class="box-left">
+                <h2 style="text-align: center"><span th:text="${registerPublishTitle}+笔试准考证"></span></h2>
+                <div class="photo-wrapper" style="margin-top: 20px; display: flex; justify-content: center;">
+                    <img class="photo" src="http://82.157.42.25:9001/style-register-public/picture/1814866032196718592.png" alt="证件照"/>
+                </div>
+
+
+                <p>姓名: <span th:text="${name}"></span></p>
+                <p>准考证号: <span th:text="${registerNumber}"></span></p>
+                <p>证件号码: <span th:text="${idNumber}"></span></p>
+                <p>考点: <span th:text="${spot}"></span></p>
+                <p>考点地址: <span th:text="${address}"></span></p>
+                <p>考场号: <span th:text="${roomNumber}"></span></p>
+                <p>座位号: <span th:text="${seatNumber}">02</span></p>
+                <p>考试日期: <span th:text="${date}"></span></p>
+                <p>考试时间: <span th:text="${time}"></span></p>
+            </td>
+            <!-- 注意事项框 -->
+            <td class="box">
+                <h2 style="text-align: center;">应试人员须知</h2>
+                <div th:utext="${noticeHtml}"></div>
+                <!--                <p>1. 凭纸质版准考证、本人有效居民身份证原件（缺一不可）进入考场，在座次表上签到后，对号入座，并将两证放在桌子边角。</p>-->
+                <!--                <p>2. 考试时须携带黑色字迹的钢笔或签字笔、2B铅笔、橡皮。严禁携带任何书籍、资料、草稿纸及手机、计算器、智能手表、智能手环、蓝牙耳机等通信、计算、存储设备；已带入的，应存放在指定位置，电子产品应切断电源。考试期间，凡发现应试人员随身携带违禁物品或带至座位的，一律按违纪处理。</p>-->
+                <!--                <p>3. 考试开始和结束时间以考试铃声为准，个人计时工具及考场内钟表时间仅作参考。</p>-->
+                <!--                <p>4. 考试实行全场封闭，开考 30 分钟后不得入场；考试结束前不得提前交卷出场。</p>-->
+                <!--                <p>5. 考试结束铃响，应立即停止答题，将试卷、答题卡分别反面向上放在桌子上，并举起右手。监考人员回收试卷、答题卡时，应试人员须在座次表上履行交卷签字程序。经监考人员允许后，应试人员方可离开考场，不得将试卷、题卡、草稿纸带出或传出考场。考试配发的草稿纸，考后统一收回。</p>-->
+                <!--                <p>6. 考试期间，不得损毁试卷，不得以任何形式抄录试题、答案及相关内容。</p>-->
+                <!--                <p>7. 考试期间，应试人员有义务保护好自己的试卷和答题信息，不被他人抄袭。阅卷过程中将采用技术手段对答卷进行雷同检测，对被甄别为雷同的，将给予考试成绩无效处理。</p>-->
+                <!--                <p>8. 自觉遵守“考场规则”，如有违纪违规行为，将严肃处理。</p>-->
+                <!--                <p>9. 考试期间出行人数较多，可能造成考点周围交通拥堵，请于考试前熟悉考点地址和交通路线。考生进入考点考场前，须接受身份核验等，建议提前 1 小时到达考点以免影响考试。</p>-->
+                <!--                <p>10. 请妥善保管准考证，以备成绩查询和面试时使用。成绩公布后考生按指定网站查询。</p>-->
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

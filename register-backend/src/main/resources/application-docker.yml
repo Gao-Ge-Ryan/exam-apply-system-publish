@@ -1,0 +1,18 @@
+# docker-compose使用的配置文件
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=GMT%2B8&useUnicode=true&characterEncodeing=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USER}
+    password: ${DB_PWD}
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PWD}
+    database: ${REDIS_DB:0}
+server:
+  port: 6666
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+

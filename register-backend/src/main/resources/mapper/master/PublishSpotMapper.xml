@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.PublishSpotMapper">
+    <resultMap type="top.gaogle.pojo.model.PublishSpotModel" id="PublishSpotMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="registerPublishId" column="register_publish_id" jdbcType="VARCHAR"/>
+        <result property="spotInfoId" column="spot_info_id" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, register_publish_id, spot_info_id, create_by, create_at, update_by, update_at
+    </sql>
+
+    <insert id="insert">
+        insert into publish_spot(<include refid="sqlAllColumns"/>)
+        values (#{id},#{registerPublishId}, #{spotInfoId}, #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
+    </insert>
+
+    <delete id="deleteByRegisterPublishId">
+        delete
+        from publish_spot
+        where register_publish_id = #{registerPublishId}
+    </delete>
+    <delete id="deleteByRegisterPublishIdAndSpotInfoId">
+        delete
+        from publish_spot
+        where register_publish_id = #{registerPublishId}
+          and spot_info_id = #{unbindSpotInfoId}
+    </delete>
+
+</mapper>

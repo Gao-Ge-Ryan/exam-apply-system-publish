@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.CommentMapper">
+    <resultMap type="top.gaogle.pojo.model.CommentModel" id="CommentMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="enterpriseId" column="enterprise_id" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+        <result property="rootId" column="root_id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="replyBy" column="reply_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id,enterprise_id, root_id,parent_id,title,status, content, create_by,reply_by, create_at
+    </sql>
+    <insert id="insert">
+        insert into comment(<include refid="sqlAllColumns"/>)
+        values (#{id},#{enterpriseId} ,#{rootId},#{parentId},#{title},#{status}, #{content}, #{createBy},#{replyBy},
+        #{createAt})
+    </insert>
+    <update id="putComment">
+        update comment
+        <set>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById">
+        delete
+        from comment
+        where id = #{id}
+           or root_id = #{id}
+    </delete>
+    <select id="queryByParentId" resultMap="CommentMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from comment
+        where parent_id =#{parentId}
+    </select>
+
+    <select id="queryByPageAndCondition" resultMap="CommentMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from comment
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and parent_id = #{parentId}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="createAt != null">
+                and create_at = #{createAt}
+            </if>
+            <!-- 模糊搜索 -->
+            <if test="search != null">
+                <bind name="searchValue" value="'%' + search + '%'"/>
+                and (
+                title like #{searchValue}
+                or content like #{searchValue}
+                )
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+    <select id="queryOneByIdAndRoot" resultMap="CommentMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from comment where id =#{id} and parent_id =#{parentId}
+    </select>
+    <select id="queryByRootId" resultMap="CommentMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from comment where  root_id=#{rootId} order by create_at ASC
+    </select>
+
+
+</mapper>

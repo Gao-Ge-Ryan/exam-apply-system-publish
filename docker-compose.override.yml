@@ -1,0 +1,20 @@
+# 如果同时存在 docker-compose.yml 和 docker-compose.override.yml 文件，则在运行 docker-compose 命令时，Docker Compose 会合并这两个文件的配置，并以 docker-compose.yml 中的配置为基础，然后应用 docker-compose.override.yml 中的配置来覆盖基础配置。
+# 这意味着 docker-compose.override.yml 中的配置将覆盖 docker-compose.yml 中的同名配置。例如，如果 docker-compose.yml 中指定了一个服务的端口为 8000，而 docker-compose.override.yml 中将其更改为 8080，则最终端口将是 8080。
+# 因此，docker-compose.override.yml 文件通常用于存放本地开发环境的配置，而 docker-compose.yml 文件则用于存放生产环境的配置。这样，在本地开发时，可以通过覆盖基础配置来调整一些参数，而不需要更改生产环境的配置
+version: "3.3"
+services:
+  #考试报名系统后端服务
+  exam-backend:
+    build:
+      context: ./exam-backend
+      dockerfile: Dockerfile
+  #考试报名系统后台管理服务
+  exam-admin-side:
+    build:
+      context: ./exam-frontend/admin-side
+      dockerfile: Dockerfile
+  # Mysql数据库-8.0.21版本
+  database:
+    build:
+      context: ./exam-backend
+      dockerfile: mysql.dockerfile

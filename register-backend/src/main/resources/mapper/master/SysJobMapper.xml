@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.SysJobMapper">
+
+    <resultMap type="top.gaogle.pojo.domain.SysJob" id="SysJobMap">
+        <result property="jobId" column="job_id" jdbcType="VARCHAR"/>
+        <result property="jobName" column="job_name" jdbcType="VARCHAR"/>
+        <result property="jobGroup" column="job_group" jdbcType="VARCHAR"/>
+        <result property="invokeTarget" column="invoke_target" jdbcType="VARCHAR"/>
+        <result property="cronExpression" column="cron_expression" jdbcType="VARCHAR"/>
+        <result property="misfirePolicy" column="misfire_policy" jdbcType="VARCHAR"/>
+        <result property="concurrent" column="concurrent" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        job_id, job_name, job_group, invoke_target, cron_expression, misfire_policy, concurrent, status, create_by, create_at, update_by, update_at
+    </sql>
+
+
+    <insert id="insertJob">
+        insert into sys_job(<include refid="sqlAllColumns"/>)
+        values (#{jobId},#{jobName},#{jobGroup},#{invokeTarget}, #{cronExpression}, #{misfirePolicy}, #{concurrent},
+        #{status}, #{createBy},
+        #{createAt}, #{updateBy}, #{updateAt})
+    </insert>
+    <delete id="deleteJobById">
+        delete
+        from sys_job
+        where job_id = #{jobId}
+    </delete>
+
+    <select id="selectJobAll" resultMap="SysJobMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from sys_job
+    </select>
+    <select id="selectJobById" resultMap="SysJobMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from sys_job where job_id = #{jobId}
+    </select>
+
+    <update id="updateJob">
+        update sys_job
+        <set>
+            <if test="invokeTarget != null and invokeTarget != ''">
+                invoke_target = #{invokeTarget},
+            </if>
+            <if test="cronExpression != null and cronExpression != ''">
+                cron_expression = #{cronExpression},
+            </if>
+            <if test="misfirePolicy != null and misfirePolicy != ''">
+                misfire_policy = #{misfirePolicy},
+            </if>
+            <if test="concurrent != null and concurrent != ''">
+                concurrent = #{concurrent},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+        </set>
+        where job_id = #{jobId}
+    </update>
+
+
+</mapper> 

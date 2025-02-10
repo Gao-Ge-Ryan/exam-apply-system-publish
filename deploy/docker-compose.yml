@@ -1,0 +1,88 @@
+version: '3.3'
+services:
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    privileged: true
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '5g'
+    ports:
+      - '6379:6379'
+    volumes:
+      - /opt/redis/data:/data
+      - /opt/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - /opt/redis/logs:/logs
+    #配置文件启动
+    command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+      - TZ=Asia/Shanghai
+
+  mysql:
+    # 指定容器的名称
+    container_name: mysql
+    # 指定镜像和版本
+    image: mysql:8.0.21
+    ports:
+      - "3306:3306"
+    restart: always
+    privileged: true
+    # 容器日志大小配置
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '5g'
+    environment:
+      # 配置root密码
+      MYSQL_ROOT_PASSWORD: Mysql123
+      MYSQL_TIMEZONE: "Asia/Shanghai"
+    volumes:
+      # 挂载数据目录
+      - "/opt/mysql/data:/var/lib/mysql"
+      # 挂载配置文件目录
+      - "/opt/mysql/config:/etc/mysql/conf.d"
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    privileged: true
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '5g'
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=Minio123
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+      - /opt/minio/data:/data
+      - /opt/minio/config:/root/.minio
+    command: server /data --console-address ":9000" --address ":9001"
+
+  style-register:
+    image: style-register:1.1
+    container_name: style-register
+    restart: always
+    ports:
+      - "8080:8080"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '5g'
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - /opt/backend/logs:/opt/logs
+      - /opt/backend/jar:/opt/jar
+      - /opt/backend/conf:/opt/conf
+      - /opt/backend/bin:/opt/bin

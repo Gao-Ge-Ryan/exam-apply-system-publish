@@ -1,0 +1,1 @@
+java -jar /opt/exam_backend/exam-backend-0.0.1-GA.jar

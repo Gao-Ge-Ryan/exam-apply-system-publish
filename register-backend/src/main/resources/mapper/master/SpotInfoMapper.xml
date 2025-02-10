@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.gaogle.dao.master.SpotInfoMapper">
+    <resultMap type="top.gaogle.pojo.model.SpotInfoModel" id="SpotInfoMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="spot" column="spot" jdbcType="VARCHAR"/>
+        <result property="spotAddress" column="spot_address" jdbcType="VARCHAR"/>
+        <result property="roomQuantity" column="room_quantity" jdbcType="INTEGER"/>
+        <result property="seatQuantity" column="seat_quantity" jdbcType="INTEGER"/>
+        <result property="enterpriseId" column="enterprise_id" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createAt" column="create_at" jdbcType="INTEGER"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateAt" column="update_at" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="sqlAllColumns">
+        id, spot, spot_address, room_quantity, seat_quantity, enterprise_id, status, create_by, create_at, update_by, update_at
+    </sql>
+
+    <insert id="insert">
+        insert into spot_info(<include refid="sqlAllColumns"/>)
+        values (#{id},#{spot}, #{spotAddress}, #{roomQuantity}, #{seatQuantity}, #{enterpriseId}, #{status},
+        #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="putSpotInfo">
+        update spot_info
+        <set>
+            <if test="spot != null and spot != ''">
+                spot = #{spot},
+            </if>
+            <if test="spotAddress != null and spotAddress != ''">
+                spot_address = #{spotAddress},
+            </if>
+            <if test="roomQuantity != null">
+                room_quantity = #{roomQuantity},
+            </if>
+            <if test="seatQuantity != null">
+                seat_quantity = #{seatQuantity},
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                enterprise_id = #{enterpriseId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from spot_info
+        where id = #{id}
+    </delete>
+    <select id="queryOneById" resultMap="SpotInfoMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from spot_info
+        where id = #{id}
+    </select>
+    <select id="queryByPageAndCondition" resultMap="SpotInfoMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from spot_info
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="spotAddress != null and spotAddress != ''">
+                and spot_address = #{spotAddress}
+            </if>
+            <if test="roomQuantity != null">
+                and room_quantity = #{roomQuantity}
+            </if>
+            <if test="seatQuantity != null">
+                and seat_quantity = #{seatQuantity}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                and enterprise_id = #{enterpriseId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="createAt != null">
+                and create_at = #{createAt}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+            <if test="updateAt != null">
+                and update_at = #{updateAt}
+            </if>
+            <if test="search != null and search != ''">
+                <bind name="searchLike" value="'%' + search.toUpperCase() + '%'"/>
+                AND UPPER(spot) LIKE #{searchLike}
+            </if>
+        </where>
+        ORDER BY
+        <choose>
+            <when test='sort == null or sort.trim == ""'>
+                create_at DESC
+            </when>
+            <otherwise>
+                `${sort}`
+                <choose>
+                    <when test='order != null and "DESC".equalsIgnoreCase(order.trim())'>
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+    </select>
+    <select id="queryByEnableAndEnterpriseId" resultMap="SpotInfoMap">
+        select
+        <include refid="sqlAllColumns"/>
+        from spot_info where enterprise_id =#{enterpriseId} and status =1
+    </select>
+
+    <select id="queryByRegisterPublishId" resultMap="SpotInfoMap">
+        select si.id, si.spot, si.spot_address, si.room_quantity, si.seat_quantity
+        from spot_info si
+        left join publish_spot ps on ps.spot_info_id =si.id where ps.register_publish_id =#{registerPublishId}
+    </select>
+
+
+</mapper>
