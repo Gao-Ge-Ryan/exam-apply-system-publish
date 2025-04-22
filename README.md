@@ -6,10 +6,19 @@
 3. 数据库：Mysql、Redis
 4. 部署: Docker、Docker-compose
 
+ #### 演示网址
+
+- 用户端：[www.enrollpro.top](http://www.enrollpro.top)
+- 企业端：[enterprise.enrollpro.top](http://enterprise.enrollpro.top)
+- 管理端：[admin.enrollpro.top](http://admin.enrollpro.top)
+
+
+账号：123@qq.com 密码：Hh123@qqcom  
+
 ### 考试报名系统在线展示
-1. 考试报名系统前台地址：http://82.157.42.25:2021 （说明：输入邮箱获取验证码进行注册）
-2. 考试报名系统后台管理地址：http://82.157.42.25:2022
-3. 系统体验账户： 账号：admin@qq.com 密码：123456  
+1. 考试报名系统前台地址：www.enrollpro.top 
+2. 考试报名系统后台管理地址：enterprise.enrollpro.top  admin.enrollpro.top
+3. 系统体验账户： 账号：123@qq.com 密码：Hh123@qqcom  
 4. 支付考试费用测试账号：支付宝支付账号：fynnto4071@sandbox.com 支付宝登陆密码和支付密码：111111
 5. [ **bilibili演示视频（B站）记得一赞三连哦**  ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 6. [  **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
