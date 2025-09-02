@@ -1,19 +1,21 @@
-# 基于Spring Boot、Vue的考试报名系统设计与实现-前后端分离一键部署版
+# 基于Spring Boot、Vue的考试报名系统设计与实现-前后端分离
 
 ### 软件技术架构
-1. 后端: Spring Boot2.5.3、Mybatis
-2. 前端：Vue2.0
-3. 数据库：Mysql、Redis
+1. 后端: Java:8、SpringBoot:2.5.15、Mybatis、gradle、Minio
+2. 前端：Vue3
+3. 数据库：Mysql:8.0.21、Redis:latest
 4. 部署: Docker、Docker-compose
 
- #### 演示网址
+ **可定制化的报名系统，适用于考试报名系统，活动报名系统等任何报名形式的场景，可用于生产、企业级别的项目。 项目和代码经过严格审核测试，支持私有化部署。** 
+
+#### 演示网址
 
 - 用户端：[www.enrollpro.top](http://www.enrollpro.top)
 - 企业端：[enterprise.enrollpro.top](http://enterprise.enrollpro.top)
 - 管理端：[admin.enrollpro.top](http://admin.enrollpro.top)
 
 
-账号：123@qq.com 密码：Hh123@qqcom  
+账号：123@qq.com 密码：Hh123@qqcom
 
 ### 考试报名系统在线展示
 1. 考试报名系统前台地址：www.enrollpro.top 
