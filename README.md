@@ -17,10 +17,10 @@
 
 账号：123@qq.com 密码：Hh123@qqcom
 
- **[Enroll Pro 可定制化报名系统用户手册V1.0](https://gitee.com/Gao-Ge-Ryan/exam-apply-system-publish/raw/master/Enroll%20Pro%20%E5%8F%AF%E5%AE%9A%E5%88%B6%E5%8C%96%E6%8A%A5%E5%90%8D%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8CV1.0.pdf)** 
+ **[Enroll Pro 可定制化报名系统用户手册V1.0](https://github.com/Gao-Ge-Ryan/exam-apply-system-publish/blob/main/Enroll%20Pro%20%E5%8F%AF%E5%AE%9A%E5%88%B6%E5%8C%96%E6%8A%A5%E5%90%8D%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8CV1.0.pdf)**
 
 
-[  :tw-25b6: **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
+[   **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 
 ### 功能介绍
  **Enroll Pro可定制化报名系统包含用户端、企业端、管理端三个端，涉及主要功能有：** 
@@ -48,8 +48,10 @@
 
 ### 功能详情图
 
+####  **项目一**   基于Spring Boot、Vue的考试报名系统
+
 [  **考试报名系统使用演示视频** ](https://www.bilibili.com/video/BV1px4y1N7wR/?vd_source=eac6949bd2385c66c0a975d5765c99a5)
 
+####  **项目二**     Enroll Pro 可定制化报名系统
 
-
- **[Enroll Pro 可定制化报名系统用户手册V1.0](https://gitee.com/Gao-Ge-Ryan/exam-apply-system-publish/raw/master/Enroll%20Pro%20%E5%8F%AF%E5%AE%9A%E5%88%B6%E5%8C%96%E6%8A%A5%E5%90%8D%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8CV1.0.pdf)**
+ **[Enroll Pro 可定制化报名系统用户手册V1.0](https://github.com/Gao-Ge-Ryan/exam-apply-system-publish/blob/main/Enroll%20Pro%20%E5%8F%AF%E5%AE%9A%E5%88%B6%E5%8C%96%E6%8A%A5%E5%90%8D%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8CV1.0.pdf)**
